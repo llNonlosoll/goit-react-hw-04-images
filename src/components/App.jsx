@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { SearchBar } from './SearchbarComponent/Searchbar';
 import { fetchPictures } from 'services/api';
+import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 
 export class App extends Component {
   state = {
@@ -43,6 +44,11 @@ export class App extends Component {
     return (
       <div>
         <SearchBar onSubmit={this.handleFormSubmit} />
+        {this.state.pictures.length > 0 ? (
+          <ImageGallery pictures={this.state.pictures}></ImageGallery>
+        ) : (
+          <p>Image gallery is empty...</p>
+        )}
       </div>
     );
   }
