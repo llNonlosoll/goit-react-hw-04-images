@@ -27,13 +27,15 @@ export class App extends Component {
       fetchPictures(pictureName, page)
         .then(elements => {
           if (elements.hits.length === 0) {
+            this.setState({ status: 'idle' });
             return alert('Sorry image not found...');
+
             // add notify!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           }
-          console.log(elements);
+
           this.setState(prevState => ({
             pictures: [...prevState.pictures, ...elements.hits],
-            status: 'idle',
+            status: 'resolved',
           }));
         })
         .catch(error => console.log(error));
@@ -41,15 +43,24 @@ export class App extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <SearchBar onSubmit={this.handleFormSubmit} />
-        {this.state.pictures.length > 0 ? (
-          <ImageGallery pictures={this.state.pictures}></ImageGallery>
-        ) : (
+    const { status } = this.state;
+
+    if (status === 'idle') {
+      return (
+        <div>
+          <SearchBar onSubmit={this.handleFormSubmit} />
           <p>Image gallery is empty...</p>
-        )}
-      </div>
-    );
+        </div>
+      );
+    }
+
+    if (status === 'resolved') {
+      return (
+        <div>
+          <SearchBar onSubmit={this.handleFormSubmit} />
+          <ImageGallery pictures={this.state.pictures}></ImageGallery>
+        </div>
+      );
+    }
   }
 }
