@@ -1,33 +1,39 @@
 import { Component } from 'react';
-import { SearchBar } from './SearchbarComponent/Searchbar';
 import { fetchPictures } from 'services/api';
+import { SearchBar } from './SearchbarComponent/Searchbar';
 import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
+import { Button } from './ButtonComponent/Button';
 
 export class App extends Component {
   state = {
     pictureName: '',
     page: 1,
     pictures: [],
+    totalPages: 0,
+    per_page: 12,
     status: 'idle',
   };
 
   handleFormSubmit = pictureName => {
-    this.setState({ pictureName });
+    this.setState({ pictureName, page: 1, pictures: [] });
+  };
+
+  handleLoadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   componentDidUpdate(_, prevState) {
-    const { page, pictureName } = this.state;
+    const { page, pictureName, per_page } = this.state;
 
     if (
       prevState.page !== this.state.page ||
       prevState.pictureName !== this.state.pictureName
     ) {
-      this.setState({ status: 'loading' });
-
-      fetchPictures(pictureName, page)
+      fetchPictures(pictureName, page, per_page)
         .then(elements => {
           if (elements.hits.length === 0) {
-            this.setState({ status: 'idle' });
             return alert('Sorry image not found...');
 
             // add notify!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -35,7 +41,7 @@ export class App extends Component {
 
           this.setState(prevState => ({
             pictures: [...prevState.pictures, ...elements.hits],
-            status: 'resolved',
+            totalPages: Math.ceil(elements.totalHits / per_page),
           }));
         })
         .catch(error => console.log(error));
@@ -43,24 +49,20 @@ export class App extends Component {
   }
 
   render() {
-    const { status } = this.state;
+    const { page, totalPages, pictures } = this.state;
 
-    if (status === 'idle') {
-      return (
-        <div>
-          <SearchBar onSubmit={this.handleFormSubmit} />
+    return (
+      <div>
+        <SearchBar onSubmit={this.handleFormSubmit} />
+        {pictures.length > 0 ? (
+          <ImageGallery pictures={pictures}></ImageGallery>
+        ) : (
           <p>Image gallery is empty...</p>
-        </div>
-      );
-    }
-
-    if (status === 'resolved') {
-      return (
-        <div>
-          <SearchBar onSubmit={this.handleFormSubmit} />
-          <ImageGallery pictures={this.state.pictures}></ImageGallery>
-        </div>
-      );
-    }
+        )}
+        {pictures.length > 0 && totalPages !== page && (
+          <Button onClick={this.handleLoadMore}></Button>
+        )}
+      </div>
+    );
   }
 }
