@@ -3,6 +3,7 @@ import { fetchPictures } from 'services/api';
 import { SearchBar } from './SearchbarComponent/Searchbar';
 import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 import { Button } from './ButtonComponent/Button';
+import { Loader } from './LoaderComponent/Loader.styled';
 
 export class App extends Component {
   state = {
@@ -62,6 +63,7 @@ export class App extends Component {
         {pictures.length > 0 && totalPages !== page && (
           <Button onClick={this.handleLoadMore}></Button>
         )}
+        <Loader></Loader>
       </div>
     );
   }
