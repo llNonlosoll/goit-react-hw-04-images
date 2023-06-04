@@ -21,31 +21,6 @@ export class App extends Component {
     modalVisible: false,
   };
 
-  //Приймаємо та оновлюємо данні в this.state
-  handleFormSubmit = pictureName => {
-    this.setState({ pictureName, page: 1, pictures: [] });
-  };
-
-  //Додаємо сторінку
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
-
-  // Show/Hide modal
-  toggleModal = () => {
-    this.setState(state => ({
-      modalVisible: !state.modalVisible,
-    }));
-  };
-
-  //Функія по кліку на картинку, для запису data в this.state
-  getImgData = (modalImgURL, tagsImg) => {
-    this.setState({ modalImgURL: modalImgURL, tagsImg: tagsImg });
-    this.toggleModal();
-  };
-
   // Стадія оновленння (життєвий цикл)
   componentDidUpdate(_, prevState) {
     const { page, pictureName, per_page } = this.state;
@@ -75,6 +50,31 @@ export class App extends Component {
         .catch(error => console.log(error));
     }
   }
+
+  //Приймаємо та оновлюємо данні в this.state
+  handleFormSubmit = pictureName => {
+    this.setState({ pictureName, page: 1, pictures: [] });
+  };
+
+  //Додаємо сторінку
+  handleLoadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
+  //Функія по кліку на картинку, для запису data в this.state та відкриття модалки
+  getImgData = (modalImgURL, tagsImg) => {
+    this.setState({ modalImgURL: modalImgURL, tagsImg: tagsImg });
+    this.toggleModal();
+  };
+
+  // Закриття модалки
+  toggleModal = () => {
+    this.setState(state => ({
+      modalVisible: !state.modalVisible,
+    }));
+  };
 
   render() {
     const {
