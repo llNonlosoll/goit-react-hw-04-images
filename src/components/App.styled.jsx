@@ -7,7 +7,7 @@ export const AppContainer = styled.div`
   padding-bottom: 24px;
 `;
 
-export const AppEmptyText = styled.p`
+export const AppText = styled.p`
   font-size: 40px;
   text-align: center;
 `;

@@ -6,7 +6,7 @@ import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 import { Button } from './ButtonComponent/Button';
 import { Loader } from './LoaderComponent/Loader';
 import { Modal } from './ModalComponent/Modal';
-import { AppContainer, AppEmptyText } from './App.styled';
+import { AppContainer, AppText } from './App.styled';
 
 export class App extends Component {
   state = {
@@ -97,13 +97,13 @@ export class App extends Component {
         <SearchBar onSubmit={this.handleFormSubmit} />
 
         {pictures.length === 0 && !error && (
-          <AppEmptyText>Image gallery is empty...</AppEmptyText>
+          <AppText>Image gallery is empty...</AppText>
         )}
 
         {error && (
-          <AppEmptyText>
+          <AppText>
             Oops... Something went wrong ☹ Please reload the page and try again
-          </AppEmptyText>
+          </AppText>
         )}
 
         {pictures.length > 0 && !error && (
@@ -113,7 +113,7 @@ export class App extends Component {
         {status === 'pending' && !error && <Loader />}
 
         {pictures.length > 0 && totalPages !== page && !error && (
-          <Button onClick={this.handleLoadMore}></Button>
+          <Button onClick={this.handleLoadMore} />
         )}
 
         {modalVisible && (
