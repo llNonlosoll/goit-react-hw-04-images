@@ -49,7 +49,7 @@ export class App extends Component {
       prevState.page !== this.state.page ||
       prevState.pictureName !== this.state.pictureName
     ) {
-      this.setState({ status: 'loading' });
+      this.setState({ status: 'pending' });
 
       fetchPictures(pictureName, page, per_page)
         .then(elements => {
@@ -84,18 +84,19 @@ export class App extends Component {
     return (
       <AppContainer>
         <SearchBar onSubmit={this.handleFormSubmit} />
+
         {pictures.length > 0 ? (
-          <ImageGallery
-            pictures={pictures}
-            onClick={this.getImgData}
-          ></ImageGallery>
+          <ImageGallery pictures={pictures} onClick={this.getImgData} />
         ) : (
           <AppEmptyText>Image gallery is empty...</AppEmptyText>
         )}
-        {status === 'loading' && <Loader />}
+
+        {status === 'pending' && <Loader />}
+
         {pictures.length > 0 && totalPages !== page && (
           <Button onClick={this.handleLoadMore}></Button>
         )}
+
         {modalVisible && (
           <Modal
             modalImgURL={modalImgURL}
