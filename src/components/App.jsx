@@ -19,6 +19,7 @@ export class App extends Component {
     modalImgURL: '',
     tagsImg: '',
     modalVisible: false,
+    error: false,
   };
 
   // Стадія оновленння (життєвий цикл)
@@ -47,7 +48,10 @@ export class App extends Component {
             status: 'idle',
           }));
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          this.setState({ error: true });
+          console.log(error);
+        });
     }
   }
 
@@ -85,21 +89,30 @@ export class App extends Component {
       page,
       totalPages,
       pictures,
+      error,
     } = this.state;
 
     return (
       <AppContainer>
         <SearchBar onSubmit={this.handleFormSubmit} />
 
-        {pictures.length > 0 ? (
-          <ImageGallery pictures={pictures} onClick={this.getImgData} />
-        ) : (
+        {pictures.length === 0 && !error && (
           <AppEmptyText>Image gallery is empty...</AppEmptyText>
         )}
 
-        {status === 'pending' && <Loader />}
+        {error && (
+          <AppEmptyText>
+            Oops... Something went wrong ☹ Please reload the page and try again
+          </AppEmptyText>
+        )}
 
-        {pictures.length > 0 && totalPages !== page && (
+        {pictures.length > 0 && !error && (
+          <ImageGallery pictures={pictures} onClick={this.getImgData} />
+        )}
+
+        {status === 'pending' && !error && <Loader />}
+
+        {pictures.length > 0 && totalPages !== page && !error && (
           <Button onClick={this.handleLoadMore}></Button>
         )}
 
