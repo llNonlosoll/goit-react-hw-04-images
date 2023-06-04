@@ -5,6 +5,7 @@ import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 import { Button } from './ButtonComponent/Button';
 import { Loader } from './LoaderComponent/Loader.styled';
 import { Modal } from './ModalComponent/Modal';
+import { AppContainer } from './App.styled';
 
 export class App extends Component {
   state = {
@@ -69,7 +70,7 @@ export class App extends Component {
       this.state;
 
     return (
-      <div>
+      <AppContainer>
         <SearchBar onSubmit={this.handleFormSubmit} />
         {pictures.length > 0 ? (
           <ImageGallery
@@ -90,7 +91,7 @@ export class App extends Component {
             onClose={this.toggleModal}
           />
         )}
-      </div>
+      </AppContainer>
     );
   }
 }
