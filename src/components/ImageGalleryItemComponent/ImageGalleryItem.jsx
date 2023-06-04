@@ -4,7 +4,7 @@ import { ListItem, Image } from './ImageGalleryItem.styled';
 // Картки в галереї
 export const ImageGalleryItem = ({ picture, onImgClick }) => {
   return (
-    <ListItem className="gallery-item">
+    <ListItem>
       <Image
         //викликаємо функцію App.getImgData з необхідними data
         onClick={() => {
