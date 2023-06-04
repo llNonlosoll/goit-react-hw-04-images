@@ -1,11 +1,12 @@
 import { Component } from 'react';
+import { Notify } from 'notiflix';
 import { fetchPictures } from 'services/api';
 import { SearchBar } from './SearchbarComponent/Searchbar';
 import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 import { Button } from './ButtonComponent/Button';
 import { Loader } from './LoaderComponent/Loader';
 import { Modal } from './ModalComponent/Modal';
-import { AppContainer } from './App.styled';
+import { AppContainer, AppEmptyText } from './App.styled';
 
 export class App extends Component {
   state = {
@@ -53,9 +54,10 @@ export class App extends Component {
       fetchPictures(pictureName, page, per_page)
         .then(elements => {
           if (elements.hits.length === 0) {
-            return alert('Sorry image not found...');
-
-            // add notify!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            this.setState({ status: 'idle' });
+            return Notify.failure('Sorry images not found...', {
+              position: 'center-center',
+            });
           }
 
           this.setState(prevState => ({
@@ -88,7 +90,7 @@ export class App extends Component {
             onClick={this.getImgData}
           ></ImageGallery>
         ) : (
-          <p>Image gallery is empty...</p>
+          <AppEmptyText>Image gallery is empty...</AppEmptyText>
         )}
         {status === 'loading' && <Loader />}
         {pictures.length > 0 && totalPages !== page && (

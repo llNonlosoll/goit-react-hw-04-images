@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Notify } from 'notiflix';
 import {
   SearchbarContainer,
   SearchForm,
@@ -20,9 +21,9 @@ export class SearchBar extends Component {
     event.preventDefault();
 
     if (!this.state.pictureName.trim()) {
-      alert('Please insert text to search');
-
-      // add notify!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Notify.info('Please enter a topic to search for images...', {
+        position: 'center-center',
+      });
 
       return;
     }

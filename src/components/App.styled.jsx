@@ -6,3 +6,8 @@ export const AppContainer = styled.div`
   grid-gap: 16px;
   padding-bottom: 24px;
 `;
+
+export const AppEmptyText = styled.p`
+  font-size: 40px;
+  text-align: center;
+`;
