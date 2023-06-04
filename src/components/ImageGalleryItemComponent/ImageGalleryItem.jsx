@@ -1,16 +1,17 @@
 import PropTypes from 'prop-types';
+import { ListItem, Image } from './ImageGalleryItem.styled';
 
 export const ImageGalleryItem = ({ picture, onImgClick }) => {
   return (
-    <li className="gallery-item">
-      <img
+    <ListItem className="gallery-item">
+      <Image
         onClick={() => {
           onImgClick(picture.largeImageURL, picture.tags);
         }}
         src={picture.webformatURL}
         alt={picture.tags}
       />
-    </li>
+    </ListItem>
   );
 };
 
