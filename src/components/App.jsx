@@ -4,6 +4,7 @@ import { SearchBar } from './SearchbarComponent/Searchbar';
 import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 import { Button } from './ButtonComponent/Button';
 import { Loader } from './LoaderComponent/Loader.styled';
+import { Modal } from './ModalComponent/Modal';
 
 export class App extends Component {
   state = {
@@ -13,6 +14,9 @@ export class App extends Component {
     totalPages: 0,
     per_page: 12,
     status: 'idle',
+    modalImgURL: '',
+    tagsImg: '',
+    modalVisible: false,
   };
 
   handleFormSubmit = pictureName => {
@@ -23,6 +27,17 @@ export class App extends Component {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
+  };
+
+  toggleModal = () => {
+    this.setState(state => ({
+      modalVisible: !state.modalVisible,
+    }));
+  };
+
+  getImgData = (modalImgURL, tagsImg) => {
+    this.setState({ modalImgURL: modalImgURL, tagsImg: tagsImg });
+    this.toggleModal();
   };
 
   componentDidUpdate(_, prevState) {
@@ -50,13 +65,17 @@ export class App extends Component {
   }
 
   render() {
-    const { page, totalPages, pictures } = this.state;
+    const { modalImgURL, tagsImg, modalVisible, page, totalPages, pictures } =
+      this.state;
 
     return (
       <div>
         <SearchBar onSubmit={this.handleFormSubmit} />
         {pictures.length > 0 ? (
-          <ImageGallery pictures={pictures}></ImageGallery>
+          <ImageGallery
+            pictures={pictures}
+            onClick={this.getImgData}
+          ></ImageGallery>
         ) : (
           <p>Image gallery is empty...</p>
         )}
@@ -64,6 +83,13 @@ export class App extends Component {
           <Button onClick={this.handleLoadMore}></Button>
         )}
         <Loader></Loader>
+        {modalVisible && (
+          <Modal
+            modalImgURL={modalImgURL}
+            tagsImg={tagsImg}
+            onClose={this.toggleModal}
+          />
+        )}
       </div>
     );
   }
