@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { ImageGalleryItem } from 'components/ImageGalleryItemComponent/ImageGalleryItem';
 import { List } from './ImageGallery.styled';
 
+//Галерея
 export const ImageGallery = ({ pictures, onClick }) => {
   return (
     <List>

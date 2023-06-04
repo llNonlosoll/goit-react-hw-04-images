@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import { ListItem, Image } from './ImageGalleryItem.styled';
 
+// Картки в галереї
 export const ImageGalleryItem = ({ picture, onImgClick }) => {
   return (
     <ListItem className="gallery-item">
       <Image
+        //викликаємо функцію App.getImgData з необхідними data
         onClick={() => {
           onImgClick(picture.largeImageURL, picture.tags);
         }}

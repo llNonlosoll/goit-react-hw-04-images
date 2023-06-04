@@ -21,27 +21,32 @@ export class App extends Component {
     modalVisible: false,
   };
 
+  //Приймаємо та оновлюємо данні в this.state
   handleFormSubmit = pictureName => {
     this.setState({ pictureName, page: 1, pictures: [] });
   };
 
+  //Додаємо сторінку
   handleLoadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
   };
 
+  // Show/Hide modal
   toggleModal = () => {
     this.setState(state => ({
       modalVisible: !state.modalVisible,
     }));
   };
 
+  //Функія по кліку на картинку, для запису data в this.state
   getImgData = (modalImgURL, tagsImg) => {
     this.setState({ modalImgURL: modalImgURL, tagsImg: tagsImg });
     this.toggleModal();
   };
 
+  // Стадія оновленння (життєвий цикл)
   componentDidUpdate(_, prevState) {
     const { page, pictureName, per_page } = this.state;
 
@@ -51,6 +56,7 @@ export class App extends Component {
     ) {
       this.setState({ status: 'pending' });
 
+      //Fetch
       fetchPictures(pictureName, page, per_page)
         .then(elements => {
           if (elements.hits.length === 0) {

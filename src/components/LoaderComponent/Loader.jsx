@@ -1,5 +1,6 @@
 import { Dna } from 'react-loader-spinner';
 
+// Loader
 export const Loader = () => {
   return (
     <div style={{ textAlign: 'center' }}>

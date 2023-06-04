@@ -12,11 +12,12 @@ export class SearchBar extends Component {
   state = {
     pictureName: '',
   };
-
+  // Додавання pictureName в state при зміні інпута
   handlePictureNameChange = event => {
     this.setState({ pictureName: event.currentTarget.value.toLowerCase() });
   };
 
+  // Функція при сабміті форми
   handleSubmit = event => {
     event.preventDefault();
 
@@ -28,8 +29,10 @@ export class SearchBar extends Component {
       return;
     }
 
+    // Передаємо SearchBar.state в App.state
     this.props.onSubmit(this.state.pictureName.trim());
 
+    // Резетаємо інпут
     this.setState({ pictureName: '' });
   };
 
