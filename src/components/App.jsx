@@ -3,7 +3,7 @@ import { fetchPictures } from 'services/api';
 import { SearchBar } from './SearchbarComponent/Searchbar';
 import { ImageGallery } from './ImageGalleryComponent/ImageGallery';
 import { Button } from './ButtonComponent/Button';
-import { Loader } from './LoaderComponent/Loader.styled';
+import { Loader } from './LoaderComponent/Loader';
 import { Modal } from './ModalComponent/Modal';
 import { AppContainer } from './App.styled';
 
@@ -48,6 +48,8 @@ export class App extends Component {
       prevState.page !== this.state.page ||
       prevState.pictureName !== this.state.pictureName
     ) {
+      this.setState({ status: 'loading' });
+
       fetchPictures(pictureName, page, per_page)
         .then(elements => {
           if (elements.hits.length === 0) {
@@ -59,6 +61,7 @@ export class App extends Component {
           this.setState(prevState => ({
             pictures: [...prevState.pictures, ...elements.hits],
             totalPages: Math.ceil(elements.totalHits / per_page),
+            status: 'idle',
           }));
         })
         .catch(error => console.log(error));
@@ -66,8 +69,15 @@ export class App extends Component {
   }
 
   render() {
-    const { modalImgURL, tagsImg, modalVisible, page, totalPages, pictures } =
-      this.state;
+    const {
+      status,
+      modalImgURL,
+      tagsImg,
+      modalVisible,
+      page,
+      totalPages,
+      pictures,
+    } = this.state;
 
     return (
       <AppContainer>
@@ -80,10 +90,10 @@ export class App extends Component {
         ) : (
           <p>Image gallery is empty...</p>
         )}
+        {status === 'loading' && <Loader />}
         {pictures.length > 0 && totalPages !== page && (
           <Button onClick={this.handleLoadMore}></Button>
         )}
-        <Loader></Loader>
         {modalVisible && (
           <Modal
             modalImgURL={modalImgURL}
