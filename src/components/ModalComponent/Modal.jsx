@@ -1,13 +1,16 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Overlay, ModalWindow } from './Modal.styled';
 
 export class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.onKeydown);
+    document.body.style.overflow = 'hidden';
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.onKeydown);
+    document.body.style.overflow = 'visible';
   }
 
   onKeydown = event => {
@@ -26,11 +29,11 @@ export class Modal extends Component {
     const { modalImgURL, tagsImg } = this.props;
 
     return (
-      <div className="overlay" onClick={this.onBackdropClick}>
-        <div className="modal">
+      <Overlay onClick={this.onBackdropClick}>
+        <ModalWindow>
           <img src={modalImgURL} alt={tagsImg} />
-        </div>
-      </div>
+        </ModalWindow>
+      </Overlay>
     );
   }
 }
