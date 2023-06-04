@@ -22,5 +22,6 @@ ImageGalleryItem.propTypes = {
   picture: PropTypes.shape({
     webformatURL: PropTypes.string.isRequired,
     tags: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
   }),
 };
