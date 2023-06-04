@@ -6,6 +6,8 @@ export const List = styled.ul`
   gap: 15px;
   align-content: center;
   justify-content: center;
+
+  max-width: 80vw;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
