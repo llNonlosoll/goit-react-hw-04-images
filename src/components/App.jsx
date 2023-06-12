@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { Notify } from 'notiflix';
 import { fetchPictures } from 'services/api';
 import { SearchBar } from './SearchbarComponent/Searchbar';
@@ -8,122 +8,102 @@ import { Loader } from './LoaderComponent/Loader';
 import { Modal } from './ModalComponent/Modal';
 import { AppContainer, AppText } from './App.styled';
 
-export class App extends Component {
-  state = {
-    pictureName: '',
-    page: 1,
-    pictures: [],
-    totalPages: 0,
-    per_page: 12,
-    status: 'idle',
-    modalImgURL: '',
-    tagsImg: '',
-    modalVisible: false,
-    error: false,
-  };
+export function App() {
+  const [pictureName, setPictureName] = useState('');
+  const [page, setPage] = useState(1);
+  const [pictures, setPictures] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [status, setStatus] = useState('idle');
+  const [modalImgURL, setModalImgURL] = useState('');
+  const [tagsImg, setTagsImg] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [error, setError] = useState(false);
+
+  const per_page = 12;
 
   // Стадія оновленння (життєвий цикл)
-  componentDidUpdate(_, prevState) {
-    const { page, pictureName, per_page } = this.state;
 
-    if (
-      prevState.page !== this.state.page ||
-      prevState.pictureName !== this.state.pictureName
-    ) {
-      this.setState({ status: 'pending' });
-
-      //Fetch
-      fetchPictures(pictureName, page, per_page)
-        .then(elements => {
-          if (elements.hits.length === 0) {
-            this.setState({ status: 'idle' });
-            return Notify.failure('Sorry images not found...', {
-              position: 'center-center',
-            });
-          }
-
-          this.setState(prevState => ({
-            pictures: [...prevState.pictures, ...elements.hits],
-            totalPages: Math.ceil(elements.totalHits / per_page),
-            status: 'idle',
-          }));
-        })
-        .catch(error => {
-          this.setState({ error: true });
-          console.log(error);
-        });
+  useEffect(() => {
+    if (pictureName === '') {
+      return;
     }
-  }
+    setStatus('pending');
+
+    //Fetch
+    fetchPictures(pictureName, page, per_page)
+      .then(elements => {
+        if (elements.hits.length === 0) {
+          setStatus('idle');
+          return Notify.failure('Sorry images not found...', {
+            position: 'center-center',
+          });
+        }
+
+        setPictures(prevPicture => [...prevPicture, ...elements.hits]);
+        setTotalPages(Math.ceil(elements.totalHits / per_page));
+        setStatus('idle');
+      })
+      .catch(error => {
+        setError(true);
+        console.log(error);
+      });
+  }, [pictureName, page, per_page]);
 
   //Приймаємо та оновлюємо данні в this.state
-  handleFormSubmit = pictureName => {
-    this.setState({ pictureName, page: 1, pictures: [] });
+  const handleFormSubmit = pictureName => {
+    setPictureName(pictureName);
+    setPage(1);
+    setPictures([]);
   };
 
   //Додаємо сторінку
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  //Функія по кліку на картинку, для запису data в this.state та відкриття модалки
-  getImgData = (modalImgURL, tagsImg) => {
-    this.setState({ modalImgURL: modalImgURL, tagsImg: tagsImg });
-    this.toggleModal();
+  //Функія по кліку на картинку, для запису data в state та відкриття модалки
+  const getImgData = (modalImgURL, tagsImg) => {
+    setModalImgURL(modalImgURL);
+    setTagsImg(tagsImg);
+    toggleModal();
   };
 
   // Закриття модалки
-  toggleModal = () => {
-    this.setState(state => ({
-      modalVisible: !state.modalVisible,
-    }));
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
   };
 
-  render() {
-    const {
-      status,
-      modalImgURL,
-      tagsImg,
-      modalVisible,
-      page,
-      totalPages,
-      pictures,
-      error,
-    } = this.state;
+  return (
+    <AppContainer>
+      <SearchBar onSubmit={handleFormSubmit} />
 
-    return (
-      <AppContainer>
-        <SearchBar onSubmit={this.handleFormSubmit} />
+      {pictures.length === 0 && !error && (
+        <AppText>Image gallery is empty...</AppText>
+      )}
 
-        {pictures.length === 0 && !error && (
-          <AppText>Image gallery is empty...</AppText>
-        )}
+      {error && (
+        <AppText>
+          Oops... Something went wrong ☹ Please reload the page and try again
+        </AppText>
+      )}
 
-        {error && (
-          <AppText>
-            Oops... Something went wrong ☹ Please reload the page and try again
-          </AppText>
-        )}
+      {pictures.length > 0 && !error && (
+        <ImageGallery pictures={pictures} onClick={getImgData} />
+      )}
 
-        {pictures.length > 0 && !error && (
-          <ImageGallery pictures={pictures} onClick={this.getImgData} />
-        )}
+      {status === 'pending' && !error && <Loader />}
 
-        {status === 'pending' && !error && <Loader />}
+      {pictures.length > 0 && totalPages !== page && !error && (
+        <Button onClick={handleLoadMore} />
+      )}
 
-        {pictures.length > 0 && totalPages !== page && !error && (
-          <Button onClick={this.handleLoadMore} />
-        )}
-
-        {modalVisible && (
-          <Modal
-            modalImgURL={modalImgURL}
-            tagsImg={tagsImg}
-            onClose={this.toggleModal}
-          />
-        )}
-      </AppContainer>
-    );
-  }
+      {modalVisible && (
+        <Modal
+          modalImgURL={modalImgURL}
+          tagsImg={tagsImg}
+          onClose={toggleModal}
+        />
+      )}
+    </AppContainer>
+  );
 }
