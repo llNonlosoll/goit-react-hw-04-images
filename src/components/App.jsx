@@ -21,12 +21,13 @@ export function App() {
 
   const per_page = 12;
 
-  // Стадія оновленння (життєвий цикл)
-
+  // useEffect === fetch при зміні [pictureName, page, per_page]
   useEffect(() => {
+    // при пустому pictureName - виходимо
     if (pictureName === '') {
       return;
     }
+
     setStatus('pending');
 
     //Fetch
