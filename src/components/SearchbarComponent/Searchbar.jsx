@@ -7,7 +7,7 @@ import {
   SearchFormInput,
 } from './Searchbar.styled';
 
-export function SearchBar(onSubmit) {
+export function SearchBar({ onSubmit }) {
   const [pictureName, setPictureName] = useState('');
 
   // Додавання pictureName в state при зміні інпута
@@ -28,7 +28,7 @@ export function SearchBar(onSubmit) {
     }
 
     // Передаємо SearchBar.state в App.state
-    onSubmit(this.state.pictureName.trim());
+    onSubmit(pictureName.trim());
 
     // Резетаємо інпут
     setPictureName('');
