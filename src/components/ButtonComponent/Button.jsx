@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
 import { ButtonLoadMore, ButtonContainer } from './Button.styled';
 
 // Кнопка загрузити ще
-export const Button = ({ onClick }) => {
+export function Button({ onClick }) {
   return (
     <ButtonContainer>
       <ButtonLoadMore type="button" onClick={onClick}>
@@ -10,8 +9,4 @@ export const Button = ({ onClick }) => {
       </ButtonLoadMore>
     </ButtonContainer>
   );
-};
-
-Button.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
+}
