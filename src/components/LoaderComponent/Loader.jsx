@@ -1,7 +1,7 @@
 import { Dna } from 'react-loader-spinner';
 
 // Loader
-export const Loader = () => {
+export function Loader() {
   return (
     <div style={{ textAlign: 'center' }}>
       <Dna
@@ -14,4 +14,4 @@ export const Loader = () => {
       />
     </div>
   );
-};
+}
