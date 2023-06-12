@@ -1,49 +1,38 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { Overlay, ModalWindow } from './Modal.styled';
 
-export class Modal extends Component {
-  //Вішаємо слухача подій при відкривання модалки та "відключаємо" scroll
-  componentDidMount() {
-    window.addEventListener('keydown', this.onKeydown);
+export function Modal({ modalImgURL, tagsImg, onClose }) {
+  useEffect(() => {
+    //Закриття на "esc"
+    const onKeydown = event => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
+
+    //Вішаємо слухача подій при відкривання модалки та "відключаємо" scroll
+    window.addEventListener('keydown', onKeydown);
     document.body.style.overflow = 'hidden';
-  }
 
-  //Знімакємо слухача подій при закритті модалки та "вмикаємо" scroll
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onKeydown);
-    document.body.style.overflow = 'visible';
-  }
-
-  //Закриття на "esc"
-  onKeydown = event => {
-    if (event.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
+    return () => {
+      //Знімакємо слухача подій при закритті модалки та "вмикаємо" scroll
+      window.removeEventListener('keydown', onKeydown);
+      document.body.style.overflow = 'visible';
+    };
+  }, [onClose]);
 
   //Закриття при клікі на Backdrop
-  onBackdropClick = event => {
+  const onBackdropClick = event => {
     if (event.currentTarget === event.target) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    const { modalImgURL, tagsImg } = this.props;
-
-    return (
-      <Overlay onClick={this.onBackdropClick}>
-        <ModalWindow>
-          <img src={modalImgURL} alt={tagsImg} />
-        </ModalWindow>
-      </Overlay>
-    );
-  }
+  return (
+    <Overlay onClick={onBackdropClick}>
+      <ModalWindow>
+        <img src={modalImgURL} alt={tagsImg} />
+      </ModalWindow>
+    </Overlay>
+  );
 }
-
-Modal.propTypes = {
-  modalImgURL: PropTypes.string.isRequired,
-  tagsImg: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
